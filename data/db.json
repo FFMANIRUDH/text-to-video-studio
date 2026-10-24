@@ -1,0 +1,88 @@
+{
+  "users": [],
+  "characters": [
+    {
+      "id": "narrator",
+      "name": "Narrator",
+      "description": "Calm, clear documentary narrator, medium pitch",
+      "gender": "masculine",
+      "language": "en-IN",
+      "voice": "en-IN-PrabhatNeural",
+      "rate": "+0%",
+      "pitch": "+0Hz",
+      "color": "#7c3aed",
+      "avatar_url": "/outputs/avatars/1cabe88ba47c060e.jpg",
+      "avatar_prompt": "wise storyteller portrait",
+      "owner_id": "guest",
+      "updated_at": "2026-10-24T14:22:31"
+    },
+    {
+      "id": "Christopher Robin",
+      "name": "Christopher Robin",
+      "description": "Old wise King, deep slow voice, serious",
+      "gender": "masculine",
+      "language": "en-US",
+      "voice": "en-US-ChristopherNeural",
+      "rate": "-12%",
+      "pitch": "-20Hz",
+      "color": "#f59e0b",
+      "avatar_url": "/outputs/avatars/7231e3a3adb7cbca.jpg",
+      "avatar_prompt": "elderly Indian King with golden crown, white beard, royal silk clothes, serious wise",
+      "owner_id": "guest",
+      "updated_at": "2026-10-24T14:22:31"
+    }
+  ],
+  "styles": [
+    {
+      "id": "cinematic-dark",
+      "name": "Cinematic Dark",
+      "prompt": "dark cinematic, gold accents",
+      "bg": "#0b1020",
+      "primary": "#7c3aed",
+      "accent": "#f59e0b",
+      "text": "#ffffff",
+      "font_style": "bold",
+      "owner_id": "guest",
+      "updated_at": "2026-10-24T14:22:31"
+    },
+    {
+      "id": "clean-minimal",
+      "name": "Clean Minimal",
+      "prompt": "minimal white clean",
+      "bg": "#f8fafc",
+      "primary": "#0f172a",
+      "accent": "#2563eb",
+      "text": "#0f172a",
+      "font_style": "regular",
+      "owner_id": "guest",
+      "updated_at": "2026-10-24T14:22:31"
+    },
+    {
+      "id": "neon-tech",
+      "name": "Neon Tech",
+      "prompt": "neon cyberpunk tech",
+      "bg": "#050510",
+      "primary": "#06b6d4",
+      "accent": "#ec4899",
+      "text": "#e0faff",
+      "font_style": "bold",
+      "owner_id": "guest",
+      "updated_at": "2026-10-24T14:22:31"
+    },
+    {
+      "id": "sunset-story",
+      "name": "Sunset Story",
+      "prompt": "warm sunset story cartoon",
+      "bg": "#2b1608",
+      "primary": "#ea580c",
+      "accent": "#facc15",
+      "text": "#fff7ed",
+      "font_style": "bold",
+      "owner_id": "guest",
+      "updated_at": "2026-10-24T14:22:31"
+    }
+  ],
+  "projects": [],
+  "jobs": [],
+  "autosaves": {}
+}

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Text → Code → Video Studio</title>
+<meta name="description" content="Turn any topic, prompt or script into animated videos with free AI.">
+<meta name="theme-color" content="#7c3aed">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Video Studio">
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:#070b18;color:#e5e7eb}
+header{padding:22px 28px;background:linear-gradient(120deg,#4c1d95,#7c3aed 45%,#db2777);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+header h1{margin:0;font-size:26px} header p{margin:4px 0 0;opacity:.9;font-size:14px}
+.badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);padding:6px 12px;border-radius:999px;font-size:12px;height:fit-content}
+.wrap{max-width:1280px;margin:auto;padding:18px;display:grid;grid-template-columns:1.65fr 1fr;gap:16px}
+@media(max-width:950px){.wrap{grid-template-columns:1fr}}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 4px;font-size:19px} .sub{color:#94a3b8;font-size:13px;margin:0 0 14px}
+label{display:block;font-size:12px;color:#cbd5e1;margin:10px 0 5px;font-weight:600;letter-spacing:.3px}
+input,select,textarea{width:100%;background:#020617;border:1px solid #334155;color:#f1f5f9;border-radius:10px;padding:10px 12px;font-size:14px}
+textarea{resize:vertical} input[type=color]{height:42px;padding:4px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px} .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+button{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer;background:#7c3aed;color:#fff;font-size:14px}
+button:hover{filter:brightness(1.15)} button:disabled{opacity:.45;cursor:not-allowed}
+.btn2{background:#1e293b;border:1px solid #475569} .btnPink{background:#db2777} .btnGreen{background:#059669}
+.small{padding:7px 10px;font-size:12px} .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.scene{border:1px solid #334155;border-radius:14px;padding:12px;margin-bottom:10px;background:#0b1226}
+.sceneHead{display:flex;gap:8px;align-items:center}.sceneHead b{background:#7c3aed;border-radius:8px;padding:5px 9px;font-size:12px;white-space:nowrap}
+.chip{display:inline-flex;gap:7px;align-items:center;background:#1e293b;border:1px solid #475569;padding:7px 10px;border-radius:999px;font-size:12px;margin:3px;cursor:pointer}
+.chip.sel{outline:2px solid #f59e0b}.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.item{border:1px solid #334155;border-radius:12px;padding:10px;margin:8px 0;background:#0b1226;font-size:13px}
+.item b{font-size:14px}.muted{color:#94a3b8;font-size:12px}
+.info{background:#172554;border:1px solid #2563eb;border-radius:10px;padding:10px 12px;font-size:13px;margin-top:10px;display:none}
+.warn{background:#451a03;border-color:#d97706}
+progress{width:100%;height:18px} pre{background:#020617;border:1px solid #334155;border-radius:12px;padding:12px;overflow:auto;max-height:380px;font-size:12px;white-space:pre-wrap}
+video{width:100%;border-radius:14px;background:#000;margin-top:10px}
+details{background:#0b1226;border:1px solid #334155;border-radius:12px;padding:10px 12px;margin-top:12px}
+summary{cursor:pointer;font-weight:700;font-size:13px} a{color:#c4b5fd}
+.swatches{display:flex;gap:6px;margin:6px 0}.sw{width:26px;height:26px;border-radius:8px;border:1px solid #475569}
+hr{border-color:#1e293b}
+.thumb{width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid #334155;margin-top:8px}
+.avatarPrev{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid #7c3aed;margin-top:8px}
+.avatarSm{width:38px;height:38px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;border:2px solid #475569}
+input[type=range]{padding:0} input[type=checkbox]{width:auto;transform:scale(1.25)}
+.bulkItem{border:1px solid #334155;border-radius:12px;padding:10px;margin:8px 0;background:#0b1226;font-size:13px}
+.bulkGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.bulkGrid video{width:100%;border-radius:10px}
+.profile{display:flex;gap:10px;align-items:center;background:#0b1226;border:1px solid #334155;border-radius:12px;padding:10px}
+.profile img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+code{background:#020617;border:1px solid #334155;border-radius:6px;padding:1px 6px;font-size:11px;word-break:break-all}
+.statusOk{color:#6ee7b7;font-size:12px;margin-top:8px;word-break:break-word}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header>
+ <div><h1>🎬 Text → Code → Video Studio</h1><p>Paste anything — topic, prompt, raw text or a dialogue script. Free AI breaks it into scenes, paints AI backgrounds, your saved characters speak with avatars, music auto-ducks underneath.</p></div>
+ <span class="badge">v2 · 100% FREE · AI images · Music ducking · Avatars · Bulk Shorts</span>
+</header>
+
+<div class="wrap">
+<div> <!-- LEFT -->
+ <div class="card">
+  <h2>Step 1 — Your text (anything works)</h2>
+  <p class="sub">Topic (“How gravity works”), a prompt, full narration text, or a dialogue script like <b>Raja: ...</b> / <b>[Queen] ...</b> on separate lines.</p>
+  <label>Video title</label><input id="title" placeholder="e.g. The Story of Gravity">
+  <label>Topic / prompt / script / raw text</label>
+  <textarea id="inputText" rows="9" placeholder="Paste anything here..."></textarea>
+  <div class="btns">
+    <button class="btn2 small" onclick="sample('topic')">Sample: Topic</button>
+    <button class="btn2 small" onclick="sample('dialogue')">Sample: Dialogue script</button>
+    <button class="btn2 small" onclick="sample('story')">Sample: Story text</button>
+  </div>
+  <div class="row">
+    <div><label>Format</label><select id="fmt"><option value="16:9">16:9 — YouTube long</option><option value="9:16">9:16 — Shorts / Reels</option></select></div>
+    <div><label>Visual style</label><select id="styleSelect"></select></div>
+  </div>
+  <details>
+    <summary>🤖 Free AI Settings (optional — offline engine works without any key)</summary>
+    <p class="muted">Offline engine needs no key. For smarter AI (topics become full scripts), add a <b>free</b> key: Groq (console.groq.com) · Gemini (aistudio.google.com) · OpenRouter free models (openrouter.ai). Key stays in your browser only.</p>
+    <div class="row3">
+      <div><label>Provider</label><select id="provider"><option value="offline">Offline (free, no key)</option><option value="groq">Groq (free key)</option><option value="gemini">Gemini (free key)</option><option value="openrouter">OpenRouter (free models)</option></select></div>
+      <div><label>API key</label><input id="apiKey" type="password" placeholder="only if not offline"></div>
+      <div><label>Model (blank = default free)</label><input id="model" placeholder="auto"></div>
+    </div>
+  </details>
+  <div class="btns"><button id="breakBtn" onclick="breakdown()">✨ AI Breakdown into Scenes</button></div>
+  <div class="info" id="breakInfo"></div>
+ </div>
+
+ <div class="card">
+  <h2>Step 2 — Scenes (edit anything)</h2>
+  <p class="sub">Each scene = one animated screen + one character speaking. 🎨 Generate a <b>free AI background image</b> from each scene's visual prompt — it gets Ken-Burns zoom/pan animation in the video (~5–10 sec per image, cached forever).</p>
+  <div class="btns" style="margin:0 0 10px"><button class="btnPink small" id="imgAllBtn" onclick="genAllImages()">🎨 Generate AI Images for ALL scenes</button><span class="muted" id="imgStatus" style="align-self:center"></span></div>
+  <div id="scenes"><p class="muted">No scenes yet — run the AI breakdown above.</p></div>
+  <div class="btns"><button class="btn2 small" onclick="addScene()">+ Add scene</button></div>
+ </div>
+
+ <div class="card">
+  <h2>Step 3 — Generate code &amp; video</h2>
+  <p class="sub">Draft renders fast (720p). Use Full (1080p) for the final upload. Long videos render scene-by-scene in the background — watch the progress here.</p>
+  <div class="row">
+    <div><label>Quality</label><select id="quality"><option value="draft">Draft — fast (720p)</option><option value="full">Full — 1080p</option></select></div>
+    <div><label>Voiceover</label><select id="voiceOn"><option value="true">ON — characters speak</option><option value="false">OFF — silent / text only</option></select></div>
+  </div>
+  <div class="row3">
+    <div><label>🎨 AI scene backgrounds</label><select id="useImages"><option value="true">ON — animated AI images</option><option value="false">OFF — gradient style only</option></select></div>
+    <div><label>Missing images at render?</label><select id="genImages"><option value="false">No — only images I generated</option><option value="true">Yes — auto-generate during render</option></select></div>
+    <div><label>🧑‍🎨 Character avatars on screen</label><select id="showAvatars"><option value="true">ON — avatar speaks on screen</option><option value="false">OFF</option></select></div>
+  </div>
+  <details open>
+    <summary>🎵 Background music (auto-ducks under voices)</summary>
+    <p class="muted">Built-in tracks are <b>synthesized by the app itself</b> — 100% royalty-free, no downloads. Or upload your own mp3. Music automatically gets quieter while someone speaks and swells in the gaps.</p>
+    <label>Music track</label><select id="musicSource"></select>
+    <div class="row">
+      <div><label>Music volume: <span id="musicVolLbl">35%</span></label><input type="range" id="musicVol" min="0" max="80" value="35" oninput="$('musicVolLbl').textContent=this.value+'%'"></div>
+      <div><label>Ducking (dip under voice): <span id="duckLbl">80%</span></label><input type="range" id="musicDuck" min="0" max="95" value="80" oninput="$('duckLbl').textContent=this.value+'%'"></div>
+    </div>
+    <label>Upload your own music (mp3/wav)</label><input type="file" id="musicFile" accept="audio/*">
+    <div class="btns"><button class="btn2 small" onclick="uploadMusic()">⬆ Upload music</button><button class="btn2 small" onclick="previewMusic()">🔊 Preview track</button></div>
+    <audio id="musicAudio" controls style="width:100%;margin-top:8px;display:none"></audio>
+  </details>
+  <div class="btns">
+    <button class="btnPink" onclick="genCode()">&lt;/&gt; Generate Code</button>
+    <button class="btnGreen" id="renderBtn" onclick="renderVideo()">🎥 Render Video</button>
+    <button class="btn2" onclick="saveProject()">💾 Save Project</button>
+  </div>
+  <div style="margin-top:14px"><progress id="prog" value="0" max="100"></progress><div class="muted" id="progMsg">Ready.</div></div>
+  <video id="player" controls style="display:none"></video>
+  <div class="btns" id="dlWrap" style="display:none"><a id="dlLink" href="#" download><button class="btnGreen">⬇ Download MP4</button></a></div>
+  <h3 style="margin:18px 0 6px;font-size:15px">Generated Python code</h3>
+  <pre id="codeBox">// Click "Generate Code" — your full reproducible video script appears here.</pre>
+  <div class="btns"><button class="btn2 small" onclick="copyCode()">Copy code</button><button class="btn2 small" onclick="dlCode()">Download .py</button></div>
+ </div>
+
+ <div class="card">
+  <h2>⚡ Bulk Mode — 1 topic → 10 Shorts</h2>
+  <p class="sub">Give ONE topic. Free AI creates up to <b>10 different Shorts</b> (different hooks/angles), all 9:16, using your saved style, Narrator/characters, music and avatar settings from Step 3. Renders one-by-one in the background + a ZIP of everything.</p>
+  <div class="row">
+    <div><label>Topic</label><input id="bulkTopic" placeholder="e.g. Black holes / Money habits / Mahabharata stories"></div>
+    <div><label>How many Shorts?</label><select id="bulkCount"><option>3</option><option>5</option><option selected>10</option></select></div>
+  </div>
+  <div class="btns"><button id="bulkPlanBtn" onclick="bulkPlan()">✨ Create 10 Short Scripts</button><button class="btnGreen" id="bulkRenderBtn" onclick="bulkRender()">🎥 Render Selected Shorts</button></div>
+  <div class="info" id="bulkInfo"></div>
+  <div id="bulkList"></div>
+  <div style="margin-top:12px"><progress id="bulkProg" value="0" max="100"></progress><div class="muted" id="bulkProgMsg">Bulk render idle. Note: 10 Shorts ≈ 15–40 min total in draft (AI images ON adds ~20–40 sec per Short).</div></div>
+  <div class="btns" id="bulkZipWrap" style="display:none"><a id="bulkZipLink" href="#" download><button class="btnGreen">⬇ Download ALL Shorts (ZIP)</button></a></div>
+  <div class="bulkGrid" id="bulkResults"></div>
+ </div>
+</div>
+
+<div> <!-- RIGHT -->
+ <div class="card" id="accountCard">
+  <h2>👤 Account &amp; Cloud Save</h2>
+  <p class="sub"><b>Optional login:</b> the app works fully as Guest. Sign in with Google to save characters, styles, projects and your current progress to <b>your Google Drive</b> — then it survives this link/server dying. Progress also auto-saves in this browser.</p>
+  <div id="accountBox"><div class="profile"><div style="font-size:28px">👤</div><div><b>Guest mode</b><br><span class="muted">Progress auto-saves in this browser only.</span></div></div></div>
+  <div id="googleBtn" style="margin-top:12px"></div>
+  <div class="btns"><button class="btn2 small" id="signOutBtn" style="display:none" onclick="signOutGoogle()">Sign out</button></div>
+  <label>Google Client ID (free — see setup steps below)</label>
+  <input id="googleClientId" placeholder="1234567890-xxxx.apps.googleusercontent.com">
+  <div class="btns"><button class="small" onclick="applyGoogleClientId()">✅ Use this Client ID</button></div>
+  <details>
+    <summary>🛠 Create your free Google Client ID (~3 min, one-time)</summary>
+    <ol class="muted" style="line-height:1.7;padding-left:18px">
+      <li>Go to <b>console.cloud.google.com</b> → create/select a project (any name).</li>
+      <li><b>APIs &amp; Services → Library</b> → enable <b>Google Drive API</b>.</li>
+      <li><b>Google Auth Platform / OAuth consent screen</b>: External, app name + your email. Add scopes: <code>openid email profile</code>, <code>.../auth/drive.appdata</code>, <code>.../auth/drive.file</code>. If "Testing", add your Gmail under Test users.</li>
+      <li><b>Credentials → Create credentials → OAuth client ID → Web application</b>.</li>
+      <li>Under <b>Authorized JavaScript origins</b> add every address you use:<br><span id="originList"></span></li>
+      <li>Create → copy the <b>Client ID</b> (looks like <code>...apps.googleusercontent.com</code>) → paste above → <b>Use this Client ID</b>. No client secret needed — never share the secret.</li>
+    </ol>
+    <p class="muted">Full guide with screenshots-level detail: <code>GOOGLE_SETUP.md</code> in the project folder.</p>
+  </details>
+  <hr>
+  <label>☁️ Google Drive backup (your projects &amp; progress)</label>
+  <div class="btns">
+    <button class="btnGreen small" onclick="backupToDrive(true)">⬆ Backup now to Google Drive</button>
+    <button class="btn2 small" onclick="restoreFromDrive()">⬇ Restore from Google Drive</button>
+  </div>
+  <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="autoBackup"> Auto-backup after saves &amp; renders (when Drive is connected)</label>
+  <div class="btns">
+    <button class="btn2 small" id="driveVideoBtn" onclick="uploadLastToDrive('video')">🎥 Save last video to Drive</button>
+    <button class="btn2 small" id="driveZipBtn" onclick="uploadLastToDrive('zip')">🗜 Save bulk ZIP to Drive</button>
+  </div>
+  <div class="statusOk" id="cloudStatus">Cloud: not connected yet.</div>
+  <div class="muted" id="autosaveStatus">Auto-save: waiting…</div>
+  <details>
+    <summary>💾 Manual backup file (works even without Google)</summary>
+    <div class="btns"><button class="btn2 small" onclick="downloadBackupJson()">⬇ Download backup (.json)</button></div>
+    <label>Restore from a backup file</label><input type="file" id="importBackupFile" accept="application/json">
+    <div class="btns"><button class="btn2 small" onclick="importBackupJson()">⬆ Import backup file</button></div>
+  </details>
+  <hr>
+  <div class="muted">🎬 Your saved renders (survive restarts):</div>
+  <div id="jobHistory"><p class="muted">No renders saved yet.</p></div>
+ </div>
+
+ <div class="card">
+  <h2>🎭 Characters &amp; Voices</h2>
+  <p class="sub">Add characters one by one. Describe the voice (“old deep king, slow”, “energetic young girl”) — the app auto-picks a matching free voice + speed/pitch. Saved forever for all your videos.</p>
+  <input id="chId" type="hidden">
+  <label>Character name</label><input id="chName" placeholder="e.g. King Vikram">
+  <label>Describe this character &amp; voice</label>
+  <textarea id="chDesc" rows="2" placeholder="Old wise King, deep slow voice, serious" onblur="suggestVoice()"></textarea>
+  <div class="row">
+    <div><label>Gender</label><select id="chGender" onchange="suggestVoice()"><option value="">Auto from description</option><option value="masculine">Masculine</option><option value="feminine">Feminine</option></select></div>
+    <div><label>Language / accent</label><select id="chLang" onchange="suggestVoice()"><option>en-IN</option><option>en-US</option><option>en-GB</option><option>te-IN</option><option>hi-IN</option><option>ta-IN</option></select></div>
+  </div>
+  <label>Voice (free Edge-TTS)</label><select id="chVoice"></select>
+  <div class="row3">
+    <div><label>Speed</label><input id="chRate" value="+0%"></div>
+    <div><label>Pitch</label><input id="chPitch" value="+0Hz"></div>
+    <div><label>Colour</label><input id="chColor" type="color" value="#f59e0b"></div>
+  </div>
+  <label>🧑‍🎨 Avatar image (appears on screen while this character speaks)</label>
+  <input id="chAvatarUrl" placeholder="Generate below, or it fills automatically" readonly>
+  <label>Avatar look (blank = auto from name + description)</label>
+  <input id="chAvatarPrompt" placeholder="e.g. elderly Indian King with golden crown and white beard, royal clothes">
+  <div><img id="chAvatarPrev" class="avatarPrev" style="display:none" alt="avatar"></div>
+  <div class="btns">
+    <button class="btnPink small" id="avatarGenBtn" onclick="genAvatar()">🎨 Generate Free AI Avatar</button>
+    <button class="btn2 small" onclick="genAvatar(true)">🎲 Regenerate (new look)</button>
+  </div>
+  <label>…or upload your own avatar image</label><input type="file" id="chAvatarFile" accept="image/*">
+  <div class="btns"><button class="btn2 small" onclick="uploadAvatar()">⬆ Upload avatar</button></div>
+  <label>Preview line</label><input id="chSample" placeholder="Hello, I am ...">
+  <div class="btns">
+    <button class="btn2 small" onclick="suggestVoice()">🪄 Auto-pick voice</button>
+    <button class="btn2 small" onclick="previewVoice()">🔊 Preview voice</button>
+    <button class="small" onclick="saveCharacter()">Save character</button>
+    <button class="btn2 small" onclick="clearChar()">New / clear</button>
+  </div>
+  <audio id="chAudio" controls style="width:100%;margin-top:8px;display:none"></audio>
+  <hr><div class="muted">Saved characters — use these exact names in your script / scenes:</div>
+  <div id="charList"></div>
+ </div>
+
+ <div class="card">
+  <h2>🎨 Your Custom Style</h2>
+  <p class="sub">Bring your own style: describe it in words <i>or</i> upload a reference image — colours are extracted automatically. Save it as a preset and reuse it.</p>
+  <input id="stId" type="hidden">
+  <label>Style name</label><input id="stName" placeholder="e.g. My Channel Style">
+  <label>Describe the style</label><textarea id="stPrompt" rows="2" placeholder="dark cinematic, royal gold and purple, bold text"></textarea>
+  <div class="btns"><button class="btn2 small" onclick="paletteFromPrompt()">Generate colours from description</button></div>
+  <label>…or reference image</label><input id="stImage" type="file" accept="image/*">
+  <div class="btns"><button class="btn2 small" onclick="paletteFromImage()">Extract colours from image &amp; save style</button></div>
+  <div class="row" style="grid-template-columns:repeat(4,1fr)">
+    <div><label>Background</label><input id="stBg" type="color" value="#0b1020"></div>
+    <div><label>Primary</label><input id="stPrimary" type="color" value="#7c3aed"></div>
+    <div><label>Accent</label><input id="stAccent" type="color" value="#f59e0b"></div>
+    <div><label>Text</label><input id="stText" type="color" value="#ffffff"></div>
+  </div>
+  <div class="swatches" id="swatches"></div>
+  <div class="btns"><button class="small" onclick="saveStyle()">Save style preset</button><button class="btn2 small" onclick="clearStyle()">New / clear</button></div>
+  <hr><div class="muted">Saved styles (click to load / use):</div><div id="styleList"></div>
+ </div>
+</div>
+</div>
+
+<script>
+let CHARACTERS=[], STYLES=[], VOICES=[], SCENES=[], BULK=[], MUSIC={builtins:[],uploads:[]};
+let USER={id:'guest',name:'Guest',guest:true}, SESSION_TOKEN=localStorage.getItem('ttvSession')||'';
+let GOOGLE_CLIENT_ID='', DRIVE_TOKEN='', DRIVE_TOKEN_EXP=0, DRIVE_CLIENT=null, GOOGLE_INITED='';
+let LAST_VIDEO_URL='', LAST_ZIP_URL='', LAST_DRAFT_JSON='', AUTOSAVE_STARTED=false;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+async function api(url,method='GET',body){const headers={'Content-Type':'application/json'};if(SESSION_TOKEN)headers['Authorization']='Bearer '+SESSION_TOKEN;const r=await fetch(url,{method,headers,body:body?JSON.stringify(body):undefined});if(!r.ok){let t=await r.text();try{t=JSON.parse(t).detail||t}catch(e){}throw new Error(t)}return r.json()}
+
+async function boot(){
+  const d=await api('/api/bootstrap');
+  applyBootstrap(d,false);
+  // restore newest draft: this browser vs server account autosave
+  let local=null; try{local=JSON.parse(localStorage.getItem('ttvDraftV3')||'null')}catch(e){}
+  const server=d.autosave&&d.autosave.draft?{updated_at:d.autosave.updated_at,draft:d.autosave.draft}:null;
+  const pick = (!local&&server)?server : (!server&&local)?local : (local&&server ? ((Date.parse(local.updated_at||0)>=Date.parse(server.updated_at||0))?local:server) : null);
+  if(pick&&pick.draft) applyDraft(pick.draft);
+  startAutosave();
+}
+function applyBootstrap(d,keepDraft=true){
+  USER=d.user||USER; CHARACTERS=d.characters||[];STYLES=d.styles||[];VOICES=d.voices||[];MUSIC=d.music||MUSIC;
+  $('chVoice').innerHTML=VOICES.map(v=>`<option value="${v.id}">${esc(v.label)}</option>`).join('');
+  $('apiKey').value=localStorage.getItem('freeAiKey')||'';
+  GOOGLE_CLIENT_ID=localStorage.getItem('ttvGoogleClientId')||d.google_client_id||'';
+  if($('googleClientId'))$('googleClientId').value=GOOGLE_CLIENT_ID;
+  if($('autoBackup'))$('autoBackup').checked=localStorage.getItem('ttvAutoBackup')==='1';
+  renderChars();renderStyles();renderMusic();renderAccount();renderJobs(d.jobs||[]);showOrigins();initGoogle();
+  return d;
+}
+async function refreshAccountData(applyServerDraft=false){
+  const before=gatherDraft();
+  const d=await api('/api/bootstrap');
+  applyBootstrap(d,true);
+  if(applyServerDraft && d.autosave && d.autosave.draft && Object.keys(d.autosave.draft).length){
+    applyDraft(d.autosave.draft);
+  }else{
+    // keep what the user was working on, now saved under the (new) account
+    SCENES=before.scenes||SCENES; BULK=before.BULK||BULK; renderScenes(); if(BULK.length)renderBulk();
+    saveDraftNow(true);
+  }
+  return d;
+}
+function renderChars(){
+  $('charList').innerHTML=CHARACTERS.map(c=>`<div class="item">${c.avatar_url?`<img class="avatarSm" src="${esc(c.avatar_url)}">`:`<span class="dot" style="background:${esc(c.color||'#7c3aed')}"></span>`} <b>${esc(c.name)}</b><br><span class="muted">${esc(c.description||'')}</span><br><span class="muted">🗣 ${esc(c.voice)} · ${esc(c.rate||'+0%')} · ${esc(c.pitch||'+0Hz')}${c.avatar_url?' · 🧑‍🎨 avatar saved':' · no avatar yet'}</span><div class="btns"><button class="btn2 small" onclick="editChar('${c.id}')">Edit</button><button class="btn2 small" onclick="delChar('${c.id}')">Delete</button></div></div>`).join('')||'<p class="muted">None yet.</p>';
+  if(SCENES.length) renderScenes();
+}
+function renderStyles(){
+  const cur=$('styleSelect').value;
+  $('styleSelect').innerHTML=STYLES.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+  if(cur) $('styleSelect').value=cur;
+  $('styleList').innerHTML=STYLES.map(s=>`<span class="chip" onclick="loadStyle('${s.id}')"><span class="dot" style="background:${esc(s.bg)}"></span><span class="dot" style="background:${esc(s.primary)}"></span><span class="dot" style="background:${esc(s.accent)}"></span>${esc(s.name)}</span>`).join('');
+}
+function charNames(){return [...new Set([...CHARACTERS.map(c=>c.name),...SCENES.map(s=>s.character||'Narrator')])]}
+function renderScenes(){
+  const names=charNames();
+  const anims=['fade_up','slide_left','typewriter','pop','word_highlight','chart_bars','zoom_focus'];
+  $('scenes').innerHTML=SCENES.map((s,i)=>`<div class="scene">
+   <div class="sceneHead"><b>SCENE ${i+1}</b><input value="${esc(s.title||'')}" onchange="SCENES[${i}].title=this.value" placeholder="Scene title">
+   <button class="btn2 small" onclick="SCENES.splice(${i},1);renderScenes()">✕</button></div>
+   <div class="row3">
+    <div><label>Character speaking</label><input list="chNames" value="${esc(s.character||'Narrator')}" onchange="SCENES[${i}].character=this.value"></div>
+    <div><label>Animation</label><select onchange="SCENES[${i}].animation=this.value">${anims.map(a=>`<option ${a===s.animation?'selected':''}>${a}</option>`).join('')}</select></div>
+    <div><label>Est. seconds</label><input value="${s.duration||5}" onchange="SCENES[${i}].duration=parseFloat(this.value)||5"></div>
+   </div>
+   <label>Narration / dialogue (this is what gets spoken + shown)</label>
+   <textarea rows="2" onchange="SCENES[${i}].text=this.value">${esc(s.text||'')}</textarea>
+   <label>🎨 Visual prompt → free AI background image (animated zoom/pan in video)</label>
+   <input value="${esc(s.visual_prompt||'')}" onchange="SCENES[${i}].visual_prompt=this.value">
+   <div class="btns"><button class="btnPink small" onclick="genSceneImage(${i})">${s.image_url?'🎲 Regenerate image':'🎨 Generate AI image'}</button>${s.image_url?`<button class="btn2 small" onclick="SCENES[${i}].image_url='';renderScenes()">Remove image</button>`:''}<span class="muted" id="imgStat${i}" style="align-self:center"></span></div>
+   ${s.image_url?`<img class="thumb" src="${esc(s.image_url)}">`:''}
+  </div>`).join('')+'<datalist id="chNames">'+names.map(n=>`<option value="${esc(n)}">`).join('')+'</datalist>'||'<p class="muted">No scenes yet.</p>';
+}
+function addScene(){SCENES.push({title:'New Scene',text:'',character:'Narrator',visual_prompt:'',keywords:[],animation:'fade_up',duration:5});renderScenes()}
+function sample(kind){
+ if(kind==='topic'){$('inputText').value='How does gravity actually work?';$('title').value='How Gravity Works'}
+ if(kind==='dialogue'){$('inputText').value='Narrator: Long ago, in a Kingdom beside a great river, there lived a wise old King.\nKing Vikram: My people are suffering. We must find water before the summer ends.\nQueen Meera: There is an old legend about a hidden spring beneath the black mountain.\nKing Vikram: Then we ride at dawn. No Kingdom of mine will thirst while I still breathe.\nNarrator: And so, the greatest journey of their lives began.';$('title').value='The Hidden Spring'}
+ if(kind==='story'){$('inputText').value='The Moon was not always in our sky. Billions of years ago, a planet the size of Mars crashed into the young Earth with unimaginable force. The collision melted both worlds and threw a ring of glowing rock into space. Slowly, gravity pulled that ring together, piece by piece, until it became the Moon we see tonight. Back then the Moon was ten times closer, and tides on Earth rose over a thousand metres high. Even today, the Moon is drifting away from us by almost four centimetres every single year.';$('title').value='How The Moon Was Born'}
+}
+async function breakdown(){
+  const text=$('inputText').value.trim(); if(!text) return alert('Paste some text / topic / script first bro');
+  localStorage.setItem('freeAiKey',$('apiKey').value);
+  $('breakBtn').disabled=true;$('breakBtn').textContent='✨ Breaking down…';
+  try{
+    const out=await api('/api/breakdown','POST',{text,format:$('fmt').value,provider:$('provider').value,api_key:$('apiKey').value,model:$('model').value});
+    SCENES=out.scenes; if(out.title&&!$('title').value)$('title').value=out.title;
+    const mins=(out.estimated_duration_sec/60).toFixed(1);
+    $('breakInfo').style.display='block';$('breakInfo').className='info'+(out.warnings?.length?' warn':'');
+    $('breakInfo').innerHTML=`✅ Detected: <b>${esc(out.detected_type)}</b> · Engine: <b>${esc(out.engine)}</b> · <b>${SCENES.length} scenes</b> · Estimated video length: <b>${mins} min</b> · Estimated render: <b>${esc(out.estimated_render_min)}</b><br>🎭 Characters found: <b>${esc((out.characters_detected||[]).join(', '))}</b> — add matching characters on the right to give each a unique voice (unknown characters get an auto voice).`+(out.warnings?.length?'<br>⚠️ '+out.warnings.map(esc).join('<br>⚠️ '):'');
+    renderScenes();
+  }catch(e){alert('Breakdown failed: '+e.message)}
+  $('breakBtn').disabled=false;$('breakBtn').textContent='✨ AI Breakdown into Scenes';
+}
+// characters
+async function suggestVoice(){
+  if(!$('chDesc').value&&!$('chName').value)return;
+  try{const s=await api('/api/characters/suggest','POST',{description:$('chDesc').value||$('chName').value,gender:$('chGender').value,language:$('chLang').value});
+  $('chVoice').value=s.voice;$('chRate').value=s.rate;$('chPitch').value=s.pitch;}catch(e){}
+}
+async function previewVoice(){
+  await suggestVoiceIfEmpty();
+  try{const out=await api('/api/characters/preview','POST',{name:$('chName').value,text:$('chSample').value,voice:$('chVoice').value,rate:$('chRate').value,pitch:$('chPitch').value});
+  const a=$('chAudio');a.src=out.url;a.style.display='block';a.play();}catch(e){alert(e.message)}
+}
+async function suggestVoiceIfEmpty(){}
+async function saveCharacter(){
+  const name=$('chName').value.trim(); if(!name)return alert('Give the character a name first');
+  const item={id:$('chId').value||undefined,name,description:$('chDesc').value,gender:$('chGender').value,language:$('chLang').value,voice:$('chVoice').value,rate:$('chRate').value,pitch:$('chPitch').value,color:$('chColor').value,avatar_url:$('chAvatarUrl').value,avatar_prompt:$('chAvatarPrompt').value};
+  const saved=await api('/api/characters','POST',item);
+  const i=CHARACTERS.findIndex(c=>c.id===saved.id); if(i>=0)CHARACTERS[i]=saved;else CHARACTERS.push(saved);
+  $('chId').value=saved.id;renderChars();alert('✅ Character saved: '+saved.name);
+}
+function editChar(id){const c=CHARACTERS.find(x=>x.id===id);if(!c)return;$('chId').value=c.id;$('chName').value=c.name;$('chDesc').value=c.description||'';$('chGender').value=c.gender||'';$('chLang').value=c.language||'en-IN';$('chVoice').value=c.voice;$('chRate').value=c.rate||'+0%';$('chPitch').value=c.pitch||'+0Hz';$('chColor').value=c.color||'#f59e0b';$('chAvatarUrl').value=c.avatar_url||'';$('chAvatarPrompt').value=c.avatar_prompt||'';const im=$('chAvatarPrev');if(c.avatar_url){im.src=c.avatar_url;im.style.display='block'}else im.style.display='none';window.scrollTo({top:0,behavior:'smooth'})}
+async function delChar(id){if(!confirm('Delete this character?'))return;await api('/api/characters/'+id,'DELETE');CHARACTERS=CHARACTERS.filter(c=>c.id!==id);renderChars()}
+function clearChar(){['chId','chName','chDesc','chSample','chAvatarUrl','chAvatarPrompt'].forEach(i=>$(i).value='');$('chRate').value='+0%';$('chPitch').value='+0Hz';$('chAvatarPrev').style.display='none'}
+// styles
+function loadStyle(id){const s=STYLES.find(x=>x.id===id);if(!s)return;$('styleSelect').value=id;$('stId').value=s.id;$('stName').value=s.name;$('stPrompt').value=s.prompt||'';$('stBg').value=s.bg;$('stPrimary').value=s.primary;$('stAccent').value=s.accent;$('stText').value=s.text||'#ffffff';showSwatches(s)}
+function showSwatches(s){const cols=s.extracted||[s.bg,s.primary,s.accent,s.text];$('swatches').innerHTML=cols.map(c=>`<span class="sw" style="background:${esc(c)}" title="${esc(c)}"></span>`).join('')}
+async function paletteFromPrompt(){const p=await api('/api/styles/from-prompt','POST',{prompt:$('stPrompt').value});$('stBg').value=p.bg;$('stPrimary').value=p.primary;$('stAccent').value=p.accent;$('stText').value=p.text;showSwatches(p)}
+async function paletteFromImage(){
+ const f=$('stImage').files[0]; if(!f)return alert('Choose a reference image first');
+ const fd=new FormData();fd.append('name',$('stName').value||'Image Style');fd.append('prompt',$('stPrompt').value);fd.append('image',f);
+ const r=await fetch('/api/styles/from-image',{method:'POST',headers:SESSION_TOKEN?{Authorization:'Bearer '+SESSION_TOKEN}:{},body:fd}); if(!r.ok)return alert('Image style failed');
+ const s=await r.json(); const i=STYLES.findIndex(x=>x.id===s.id); if(i>=0)STYLES[i]=s;else STYLES.push(s);renderStyles();loadStyle(s.id);alert('✅ Style extracted from image & saved');
+}
+async function saveStyle(){
+ const item={id:$('stId').value||undefined,name:$('stName').value||'Custom Style',prompt:$('stPrompt').value,bg:$('stBg').value,primary:$('stPrimary').value,accent:$('stAccent').value,text:$('stText').value,font_style:'bold'};
+ const s=await api('/api/styles','POST',item);const i=STYLES.findIndex(x=>x.id===s.id);if(i>=0)STYLES[i]=s;else STYLES.push(s);renderStyles();$('styleSelect').value=s.id;alert('✅ Style saved');
+}
+function clearStyle(){['stId','stName','stPrompt'].forEach(i=>$(i).value='')}
+// code + render + project
+function payload(){const style=STYLES.find(s=>s.id===$('styleSelect').value)||STYLES[0]||{};const src=$('musicSource').value;return{title:$('title').value,scenes:SCENES,style,characters:CHARACTERS,format:$('fmt').value,quality:$('quality').value,voice:$('voiceOn').value==='true',use_images:$('useImages').value==='true',generate_images:$('genImages').value==='true',show_avatars:$('showAvatars').value==='true',music:{enabled:src!=='none',source:src,volume:parseInt($('musicVol').value),duck:parseInt($('musicDuck').value)}}}
+async function genCode(){if(!SCENES.length)return alert('Breakdown into scenes first');const out=await api('/api/codegen','POST',payload());$('codeBox').textContent=out.code}
+function copyCode(){navigator.clipboard.writeText($('codeBox').textContent);alert('Code copied ✅')}
+function dlCode(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('codeBox').textContent],{type:'text/x-python'}));a.download='generated_video_code.py';a.click()}
+async function saveProject(){await api('/api/projects','POST',{name:$('title').value||'Untitled project',...payload()});alert('💾 Project saved')}
+async function renderVideo(){
+ if(!SCENES.length)return alert('Breakdown into scenes first bro');
+ $('renderBtn').disabled=true;$('progMsg').textContent='Starting render… (scenes + voices + animation)';
+ try{
+  const {job_id}=await api('/api/render','POST',payload());
+  const timer=setInterval(async()=>{
+    try{const j=await api('/api/jobs/'+job_id);$('prog').value=j.progress||0;$('progMsg').textContent=(j.progress||0)+'% — '+j.message;
+    if(j.status==='done'){clearInterval(timer);$('renderBtn').disabled=false;LAST_VIDEO_URL=j.output;const v=$('player');v.src=j.output;v.poster=j.poster||'';v.style.display='block';$('dlWrap').style.display='block';$('dlLink').href=j.output;$('progMsg').textContent=`✅ Done! ${j.duration}s · ${j.resolution} · ${j.scenes} scenes · 🎨 ${j.images_used||0} AI backgrounds · 🧑‍🎨 ${j.avatars_used||0} avatars`;saveDraftNow(true);refreshJobs();queueCloudBackup('render finished');}
+    if(j.status==='error'){clearInterval(timer);$('renderBtn').disabled=false;$('progMsg').textContent='❌ '+j.message;}}catch(e){}
+  },2000);
+ }catch(e){$('renderBtn').disabled=false;alert(e.message)}
+}
+// ---- v2: AI scene images ----
+function stylePrompt(){const s=STYLES.find(x=>x.id===$('styleSelect').value)||{};return s.prompt||''}
+async function genSceneImage(i,force=false){
+  const s=SCENES[i];const st=$('imgStat'+i);if(st)st.textContent='🎨 Painting… (~5–15 sec)';
+  try{const out=await api('/api/scene-image','POST',{prompt:s.visual_prompt||s.title||s.text,format:$('fmt').value,style_prompt:stylePrompt(),force:force||!!s.image_url,seed:Math.floor(Math.random()*999999)});
+  s.image_url=out.url;renderScenes();}catch(e){if(st)st.textContent='❌ '+e.message;alert('Image failed, try again: '+e.message)}
+}
+async function genAllImages(){
+  if(!SCENES.length)return alert('Breakdown into scenes first');
+  $('imgAllBtn').disabled=true;
+  for(let i=0;i<SCENES.length;i++){
+    if(SCENES[i].image_url){$('imgStatus').textContent=`${i+1}/${SCENES.length} (cached)`;continue}
+    $('imgStatus').textContent=`🎨 Painting ${i+1}/${SCENES.length}…`;
+    try{const out=await api('/api/scene-image','POST',{prompt:SCENES[i].visual_prompt||SCENES[i].title,format:$('fmt').value,style_prompt:stylePrompt()});SCENES[i].image_url=out.url;renderScenes();}
+    catch(e){$('imgStatus').textContent='Scene '+(i+1)+' failed, continuing…'}
+  }
+  $('imgStatus').textContent='✅ All scene images ready';$('imgAllBtn').disabled=false;renderScenes();
+}
+// ---- v2: avatars ----
+async function genAvatar(force=false){
+  const name=$('chName').value.trim();if(!name)return alert('Type the character name first, bro');
+  $('avatarGenBtn').disabled=true;$('avatarGenBtn').textContent='🎨 Painting avatar…';
+  try{const out=await api('/api/characters/avatar/generate','POST',{id:$('chId').value||undefined,name,description:$('chDesc').value,prompt:$('chAvatarPrompt').value,force,seed:force?Math.floor(Math.random()*999999):undefined});
+  $('chAvatarUrl').value=out.url;const im=$('chAvatarPrev');im.src=out.url;im.style.display='block';
+  const c=CHARACTERS.find(x=>x.id===$('chId').value);if(c){c.avatar_url=out.url;renderChars()}
+  }catch(e){alert(e.message)}
+  $('avatarGenBtn').disabled=false;$('avatarGenBtn').textContent='🎨 Generate Free AI Avatar';
+}
+async function uploadAvatar(){
+  const f=$('chAvatarFile').files[0];if(!f)return alert('Choose an avatar image first');
+  const fd=new FormData();fd.append('character_id',$('chId').value||'');fd.append('image',f);
+  const r=await fetch('/api/characters/avatar/upload',{method:'POST',headers:SESSION_TOKEN?{Authorization:'Bearer '+SESSION_TOKEN}:{},body:fd});if(!r.ok)return alert('Avatar upload failed');
+  const out=await r.json();$('chAvatarUrl').value=out.url;const im=$('chAvatarPrev');im.src=out.url;im.style.display='block';
+  const c=CHARACTERS.find(x=>x.id===$('chId').value);if(c){c.avatar_url=out.url;renderChars()} alert('✅ Avatar uploaded — now Save character');
+}
+// ---- v2: music ----
+function renderMusic(){
+  const cur=$('musicSource').value||'builtin:cinematic';
+  $('musicSource').innerHTML='<option value="none">No background music</option>'+(MUSIC.builtins||[]).map(m=>`<option value="builtin:${m.id}">${esc(m.label)}</option>`).join('')+(MUSIC.uploads||[]).map(m=>`<option value="${esc(m.url)}">⬆ ${esc(m.name)}</option>`).join('');
+  $('musicSource').value=cur;
+}
+async function previewMusic(){
+  const src=$('musicSource').value;if(src==='none')return alert('Pick a music track first');
+  let url=src;
+  if(src.startsWith('builtin:')){const out=await api('/api/music/builtin','POST',{mood:src.split(':')[1]});url=out.url}
+  const a=$('musicAudio');a.src=url;a.style.display='block';a.play();
+}
+async function uploadMusic(){
+  const f=$('musicFile').files[0];if(!f)return alert('Choose a music file first');
+  const fd=new FormData();fd.append('file',f);
+  const r=await fetch('/api/music/upload',{method:'POST',headers:SESSION_TOKEN?{Authorization:'Bearer '+SESSION_TOKEN}:{},body:fd});if(!r.ok)return alert('Music upload failed');
+  const out=await r.json();MUSIC.uploads.push(out);renderMusic();$('musicSource').value=out.url;alert('✅ Music uploaded & selected');
+}
+// ---- v2: bulk mode ----
+function renderBulk(){
+  $('bulkList').innerHTML=BULK.map((it,i)=>`<div class="bulkItem">
+   <label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" ${it.include?'checked':''} onchange="BULK[${i}].include=this.checked"><b>#${i+1} ${esc(it.angle||'')}</b><span class="muted">~${it.estimated_duration_sec||'?'}s · ${it.scenes.length} scenes · 9:16</span></label>
+   <input style="margin-top:8px" value="${esc(it.title||'')}" onchange="BULK[${i}].title=this.value">
+   <details><summary>View / edit scenes</summary>${it.scenes.map((s,j)=>`<label>Scene ${j+1} — ${esc(s.title||'')} (${esc(s.character||'Narrator')})</label><textarea rows="2" onchange="BULK[${i}].scenes[${j}].text=this.value">${esc(s.text||'')}</textarea>`).join('')}</details>
+   <div class="btns"><button class="btn2 small" onclick="loadBulkIntoEditor(${i})">Open in main editor</button><button class="btn2 small" onclick="BULK.splice(${i},1);renderBulk()">Remove</button></div>
+  </div>`).join('')||'<p class="muted">No bulk Shorts yet — create some above.</p>';
+}
+function loadBulkIntoEditor(i){const it=BULK[i];SCENES=JSON.parse(JSON.stringify(it.scenes));$('title').value=it.title||'';$('fmt').value='9:16';renderScenes();window.scrollTo({top:0,behavior:'smooth'});alert('Loaded into the main editor (Step 2). You can add AI images, then render from Step 3.')}
+async function bulkPlan(){
+  const topic=$('bulkTopic').value.trim()||$('inputText').value.trim()||$('title').value.trim();
+  if(!topic)return alert('Type a topic for bulk mode first');
+  $('bulkTopic').value=topic;$('bulkPlanBtn').disabled=true;$('bulkPlanBtn').textContent='✨ Writing Shorts…';
+  try{const out=await api('/api/bulk/plan','POST',{topic,count:parseInt($('bulkCount').value),provider:$('provider').value,api_key:$('apiKey').value,model:$('model').value});
+  BULK=out.items;renderBulk();
+  $('bulkInfo').style.display='block';$('bulkInfo').className='info'+(out.warnings?.length?' warn':'');
+  $('bulkInfo').innerHTML=`✅ <b>${BULK.length} Shorts</b> planned for “${esc(out.topic)}” · Engine: <b>${esc(out.engine)}</b> · each ~30–50 sec, 9:16. Tick/untick, edit any scene, then Render Selected.`+(out.warnings?.length?'<br>⚠️ '+out.warnings.map(esc).join('<br>'):'');
+  }catch(e){alert('Bulk plan failed: '+e.message)}
+  $('bulkPlanBtn').disabled=false;$('bulkPlanBtn').textContent='✨ Create 10 Short Scripts';
+}
+async function bulkRender(){
+  const items=BULK.filter(x=>x.include);if(!items.length)return alert('Create a bulk plan and tick at least one Short');
+  if(!confirm(`Render ${items.length} Shorts now? This keeps running in the background — roughly ${items.length*2}–${items.length*4} min in draft (plus AI image time if auto-generate is ON).`))return;
+  $('bulkRenderBtn').disabled=true;$('bulkResults').innerHTML='';$('bulkZipWrap').style.display='none';
+  try{const base=payload();const {job_id}=await api('/api/bulk/render','POST',{...base,format:'9:16',items});
+  const timer=setInterval(async()=>{try{const j=await api('/api/jobs/'+job_id);
+    $('bulkProg').value=j.progress||0;$('bulkProgMsg').textContent=(j.progress||0)+'% — '+j.message+` (${(j.results||[]).filter(r=>r.status==='done').length} done)`;
+    $('bulkResults').innerHTML=(j.results||[]).filter(r=>r.status==='done').map(r=>`<div><video controls preload="none" poster="${esc(r.poster||'')}" src="${esc(r.output)}"></video><div class="muted" style="margin-top:4px">${esc(r.title||'')} · ${r.duration||'?'}s<br><a href="${esc(r.output)}" download>⬇ Download</a></div></div>`).join('');
+    if(j.status==='done'||j.status==='error'){clearInterval(timer);$('bulkRenderBtn').disabled=false;if(j.zip){LAST_ZIP_URL=j.zip;$('bulkZipWrap').style.display='block';$('bulkZipLink').href=j.zip}$('bulkProgMsg').textContent=(j.status==='done'?'✅ ':'❌ ')+j.message;saveDraftNow(true);refreshJobs();if(j.status==='done')queueCloudBackup('bulk render finished');}
+  }catch(e){}},3000);
+  }catch(e){$('bulkRenderBtn').disabled=false;alert(e.message)}
+}
+// ===================== v3: account, autosave, Google Drive =====================
+function setCloudStatus(m){const e=$('cloudStatus');if(e)e.textContent=m}
+function showOrigins(){const e=$('originList');if(!e)return;const origins=[...new Set([location.origin,'http://localhost:8000','http://127.0.0.1:8000'])];e.innerHTML=origins.map(o=>`<code>${esc(o)}</code>`).join(' ')}
+function renderAccount(){
+  const box=$('accountBox');if(!box)return;
+  if(USER&&!USER.guest){
+    box.innerHTML=`<div class="profile">${USER.picture?`<img src="${esc(USER.picture)}" alt="">`:'<div style="font-size:28px">✅</div>'}<div><b>${esc(USER.name||'Signed in')}</b><br><span class="muted">${esc(USER.email||'')}</span><br><span class="muted">Saving under your account. Backup to Drive below.</span></div></div>`;
+    $('signOutBtn').style.display='inline-block';$('googleBtn').style.display='none';
+  }else{
+    box.innerHTML='<div class="profile"><div style="font-size:28px">👤</div><div><b>Guest mode</b><br><span class="muted">Progress auto-saves in this browser only. Sign in to save to Google Drive.</span></div></div>';
+    $('signOutBtn').style.display='none';$('googleBtn').style.display='block';
+  }
+}
+function renderJobs(jobs){
+  const elx=$('jobHistory');if(!elx)return;
+  jobs=jobs||[];
+  const latestVideo=jobs.find(j=>j.status==='done'&&j.output); if(latestVideo&&!LAST_VIDEO_URL)LAST_VIDEO_URL=latestVideo.output;
+  const latestZip=jobs.find(j=>j.status==='done'&&j.zip); if(latestZip&&!LAST_ZIP_URL)LAST_ZIP_URL=latestZip.zip;
+  if(!jobs.length){elx.innerHTML='<p class="muted">No renders saved yet.</p>';return}
+  elx.innerHTML=jobs.slice(0,10).map(j=>{
+    const links=[j.output?`<a href="${esc(j.output)}" target="_blank">▶ video</a>`:'',j.zip?`<a href="${esc(j.zip)}">⬇ ZIP</a>`:''].filter(Boolean).join(' · ');
+    const bulk=(j.results||[]).filter(r=>r.output).map((r,i)=>`<a href="${esc(r.output)}" target="_blank">Short ${i+1}</a>`).join(' · ');
+    return `<div class="item"><b>${esc(j.title||j.type||'Render')}</b> <span class="muted">${esc(j.created_at||'')} · ${esc(j.status||'')}</span><br><span class="muted">${esc(j.message||'')}</span>${(links||bulk)?'<br>'+links+(bulk?(links?' · ':'')+bulk:''):''}</div>`;
+  }).join('');
+}
+async function refreshJobs(){try{const d=await api('/api/bootstrap');renderJobs(d.jobs||[])}catch(e){}}
+// ---------- draft autosave ----------
+function gatherDraft(){
+  const val=id=>{const e=$(id);return e?e.value:''};
+  return {v:3,title:val('title'),inputText:val('inputText'),fmt:val('fmt'),style_id:val('styleSelect'),quality:val('quality'),voiceOn:val('voiceOn'),
+    useImages:val('useImages'),genImages:val('genImages'),showAvatars:val('showAvatars'),musicSource:val('musicSource'),musicVol:val('musicVol'),musicDuck:val('musicDuck'),
+    provider:val('provider'),model:val('model'),scenes:SCENES,bulkTopic:val('bulkTopic'),bulkCount:val('bulkCount'),BULK:BULK,lastVideo:LAST_VIDEO_URL,lastZip:LAST_ZIP_URL};
+}
+function applyDraft(d){
+  if(!d)return;
+  const set=(id,v)=>{const e=$(id);if(e&&v!==undefined&&v!==null)e.value=v};
+  set('title',d.title);set('inputText',d.inputText);set('fmt',d.fmt);set('quality',d.quality);set('voiceOn',d.voiceOn);
+  set('useImages',d.useImages);set('genImages',d.genImages);set('showAvatars',d.showAvatars);set('musicVol',d.musicVol);set('musicDuck',d.musicDuck);
+  set('provider',d.provider);set('model',d.model);set('bulkTopic',d.bulkTopic);set('bulkCount',d.bulkCount);
+  if(d.style_id&&STYLES.some(s=>s.id===d.style_id))set('styleSelect',d.style_id);
+  if(d.musicSource)set('musicSource',d.musicSource);
+  if(d.musicVol)$('musicVolLbl').textContent=d.musicVol+'%'; if(d.musicDuck)$('duckLbl').textContent=d.musicDuck+'%';
+  SCENES=Array.isArray(d.scenes)?d.scenes:[]; BULK=Array.isArray(d.BULK)?d.BULK:[];
+  if(SCENES.length)renderScenes(); if(BULK.length)renderBulk();
+  LAST_VIDEO_URL=d.lastVideo||LAST_VIDEO_URL; LAST_ZIP_URL=d.lastZip||LAST_ZIP_URL;
+  if(LAST_VIDEO_URL){const v=$('player');v.src=LAST_VIDEO_URL;v.style.display='block';$('dlWrap').style.display='block';$('dlLink').href=LAST_VIDEO_URL}
+  if(LAST_ZIP_URL){$('bulkZipWrap').style.display='block';$('bulkZipLink').href=LAST_ZIP_URL}
+}
+function saveDraftNow(server=false){
+  try{
+    const draft=gatherDraft(), updated_at=new Date().toISOString();
+    LAST_DRAFT_JSON=JSON.stringify(draft);
+    localStorage.setItem('ttvDraftV3',JSON.stringify({updated_at,draft}));
+    const e=$('autosaveStatus');if(e)e.textContent='Auto-save: saved '+new Date().toLocaleTimeString()+' ('+(USER.guest?'this browser':'browser + your account')+')';
+    if(server)api('/api/autosave','POST',{draft,updated_at}).catch(()=>{});
+  }catch(err){}
+}
+let LAST_COLL_JSON='', CLOUD_BACKUP_TIMER=null;
+function queueCloudBackup(reason){
+  const cb=$('autoBackup'); if(cb)localStorage.setItem('ttvAutoBackup',cb.checked?'1':'0');
+  if(!cb||!cb.checked)return;
+  if(USER.guest||!DRIVE_TOKEN||DRIVE_TOKEN_EXP<Date.now()+60000){setCloudStatus('Cloud: auto-backup is ON but Drive is not connected yet — sign in and click “Backup now” once.');return}
+  clearTimeout(CLOUD_BACKUP_TIMER);
+  CLOUD_BACKUP_TIMER=setTimeout(()=>backupToDrive(false).catch(e=>setCloudStatus('Cloud auto-backup failed: '+e.message)),8000);
+}
+function startAutosave(){
+  if(AUTOSAVE_STARTED)return; AUTOSAVE_STARTED=true;
+  LAST_DRAFT_JSON=JSON.stringify(gatherDraft());
+  LAST_COLL_JSON=JSON.stringify({c:CHARACTERS,s:STYLES});
+  const cb=$('autoBackup'); if(cb)cb.addEventListener('change',()=>{localStorage.setItem('ttvAutoBackup',cb.checked?'1':'0');if(cb.checked)queueCloudBackup('enabled')});
+  setInterval(()=>{
+    const dj=JSON.stringify(gatherDraft());
+    if(dj!==LAST_DRAFT_JSON){saveDraftNow(true);queueCloudBackup('autosave')}
+    const cj=JSON.stringify({c:CHARACTERS,s:STYLES});
+    if(cj!==LAST_COLL_JSON){LAST_COLL_JSON=cj;queueCloudBackup('characters/styles changed')}
+  },5000);
+  window.addEventListener('beforeunload',()=>saveDraftNow(false));
+}
+// ---------- Google sign-in ----------
+function applyGoogleClientId(){
+  GOOGLE_CLIENT_ID=$('googleClientId').value.trim();
+  localStorage.setItem('ttvGoogleClientId',GOOGLE_CLIENT_ID);
+  GOOGLE_INITED='';DRIVE_TOKEN='';
+  setCloudStatus(GOOGLE_CLIENT_ID?'Cloud: Client ID saved in this browser. Use the Google button to sign in.':'Cloud: paste your free Google Client ID first.');
+  initGoogle();
+}
+function initGoogle(){
+  const btn=$('googleBtn');if(!btn)return;
+  const cid=($('googleClientId')?$('googleClientId').value.trim():'')||GOOGLE_CLIENT_ID;
+  if(!cid){btn.innerHTML='<p class="muted">👇 First create/paste your free Google Client ID below — then the Google sign-in button appears here.</p>';return}
+  if(!(window.google&&google.accounts&&google.accounts.id)){setTimeout(initGoogle,900);return}
+  if(GOOGLE_INITED===cid&&btn.innerHTML)return;
+  GOOGLE_INITED=cid;GOOGLE_CLIENT_ID=cid;
+  google.accounts.id.initialize({client_id:cid,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});
+  btn.innerHTML='';
+  google.accounts.id.renderButton(btn,{theme:'filled_blue',size:'large',text:'signin_with',shape:'pill',logo_alignment:'left',width:280});
+}
+async function handleGoogleCredential(resp){
+  try{
+    setCloudStatus('Cloud: verifying your Google sign-in…');
+    const out=await api('/api/auth/google','POST',{id_token:resp.credential,client_id:GOOGLE_CLIENT_ID});
+    SESSION_TOKEN=out.token;localStorage.setItem('ttvSession',SESSION_TOKEN);USER=out.user;
+    await refreshAccountData(false);
+    renderAccount();
+    setCloudStatus('Cloud: ✅ Signed in as '+(USER.email||USER.name)+'. Now click “Backup now to Google Drive” to save everything to your Drive.');
+  }catch(e){alert('Google sign-in failed: '+e.message);setCloudStatus('Cloud: sign-in failed — check the Client ID and that this exact web address is in Authorized JavaScript origins.')}
+}
+async function signOutGoogle(){
+  try{await api('/api/auth/logout','POST',{})}catch(e){}
+  SESSION_TOKEN='';localStorage.removeItem('ttvSession');DRIVE_TOKEN='';USER={id:'guest',name:'Guest',guest:true};
+  if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
+  await refreshAccountData(false);renderAccount();setCloudStatus('Cloud: signed out. You are in Guest mode; this browser draft is still auto-saved.');
+}
+// ---------- Google Drive ----------
+function ensureDriveToken(){
+  return new Promise((resolve,reject)=>{
+    if(DRIVE_TOKEN&&DRIVE_TOKEN_EXP>Date.now()+60000)return resolve(DRIVE_TOKEN);
+    if(USER.guest)return reject(new Error('Sign in with Google first (button above), then connect Drive.'));
+    const cid=($('googleClientId')?$('googleClientId').value.trim():'')||GOOGLE_CLIENT_ID;
+    if(!cid)return reject(new Error('Paste your Google Client ID first.'));
+    if(!(window.google&&google.accounts&&google.accounts.oauth2))return reject(new Error('Google script is still loading — wait 2 seconds and try again.'));
+    const client=google.accounts.oauth2.initTokenClient({
+      client_id:cid,
+      scope:'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file',
+      callback:(resp)=>{
+        if(resp.error)return reject(new Error(resp.error_description||resp.error));
+        DRIVE_TOKEN=resp.access_token;DRIVE_TOKEN_EXP=Date.now()+((resp.expires_in||3600)*1000);
+        localStorage.setItem('ttvDriveConsent','1');resolve(DRIVE_TOKEN);
+      },
+      error_callback:(err)=>reject(new Error(err.message||'Google Drive permission was not granted.'))
+    });
+    client.requestAccessToken({prompt:localStorage.getItem('ttvDriveConsent')?'':'consent'});
+  });
+}
+async function driveFetch(url,opts={}){
+  const token=await ensureDriveToken();
+  const r=await fetch(url,{...opts,headers:{...(opts.headers||{}),Authorization:'Bearer '+token}});
+  if(!r.ok){const t=await r.text();throw new Error('Google Drive: '+t.slice(0,300))}
+  return r;
+}
+async function findDriveBackup(){
+  const q=encodeURIComponent("name='text-to-video-studio-backup.json' and trashed=false");
+  const r=await driveFetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,name,modifiedTime,size)`);
+  const d=await r.json();return (d.files||[])[0]||null;
+}
+async function backupToDrive(manual=true){
+  if(USER.guest){const m='Sign in with Google first, then backup.';setCloudStatus('Cloud: '+m);if(manual)alert(m);throw new Error(m)}
+  setCloudStatus('Cloud: preparing backup from the app…');
+  saveDraftNow(true);
+  const payload=await api('/api/cloud/export');
+  payload.autosave={updated_at:new Date().toISOString(),draft:gatherDraft()};
+  const content=JSON.stringify(payload);
+  setCloudStatus('Cloud: uploading backup to your Google Drive (hidden app folder)…');
+  const existing=await findDriveBackup();
+  const boundary='ttv'+Date.now();
+  const metadata=existing?{name:'text-to-video-studio-backup.json'}:{name:'text-to-video-studio-backup.json',parents:['appDataFolder']};
+  const body=`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${content}\r\n--${boundary}--`;
+  const url=existing?`https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=multipart`:'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+  await driveFetch(url,{method:existing?'PATCH':'POST',headers:{'Content-Type':`multipart/related; boundary=${boundary}`},body});
+  const when=new Date().toLocaleString();localStorage.setItem('ttvLastDriveBackup',when);
+  const warns=(payload.asset_warnings||[]).length?' ('+payload.asset_warnings.length+' large assets skipped)':'';
+  setCloudStatus(`Cloud: ✅ Backed up to YOUR Google Drive at ${when}. Characters ${payload.characters.length}, styles ${payload.styles.length}, projects ${payload.projects.length}, images ${Object.keys(payload.assets||{}).length}.${warns}`);
+  return true;
+}
+async function restoreFromDrive(){
+  try{
+    if(!confirm('Restore from Google Drive? This will update your characters, styles, projects and current draft from the backup.'))return;
+    setCloudStatus('Cloud: looking for your backup in Google Drive…');
+    const f=await findDriveBackup();
+    if(!f){alert('No backup found in this Google account yet. Click “Backup now” first.');setCloudStatus('Cloud: no backup found for this Google account.');return}
+    const r=await driveFetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`);
+    const payload=await r.json();
+    setCloudStatus('Cloud: restoring backup into the app…');
+    const out=await api('/api/cloud/import','POST',payload);
+    await refreshAccountData(true);
+    setCloudStatus(`Cloud: ✅ Restored! Characters ${out.restored.characters}, styles ${out.restored.styles}, projects ${out.restored.projects}, images ${out.assets_restored}.`);
+  }catch(e){alert('Restore failed: '+e.message);setCloudStatus('Cloud: restore failed — '+e.message)}
+}
+async function downloadBackupJson(){
+  saveDraftNow(true);
+  const payload=await api('/api/cloud/export');
+  payload.autosave={updated_at:new Date().toISOString(),draft:gatherDraft()};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download='text-to-video-studio-backup.json';a.click();
+}
+async function importBackupJson(){
+  const f=$('importBackupFile').files[0];if(!f)return alert('Choose a backup .json file first');
+  try{const payload=JSON.parse(await f.text());const out=await api('/api/cloud/import','POST',payload);await refreshAccountData(true);setCloudStatus('Cloud: ✅ Backup file imported ('+JSON.stringify(out.restored)+').')}catch(e){alert('Import failed: '+e.message)}
+}
+async function getDriveFolder(){
+  const q=encodeURIComponent("mimeType='application/vnd.google-apps.folder' and name='Text to Video Studio' and trashed=false");
+  const r=await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`);
+  const d=await r.json();if((d.files||[])[0])return d.files[0].id;
+  const c=await driveFetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Text to Video Studio',mimeType:'application/vnd.google-apps.folder'})});
+  return (await c.json()).id;
+}
+async function uploadBlobToDrive(blob,filename){
+  const token=await ensureDriveToken();
+  const folder=await getDriveFolder();
+  const init=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable',{
+    method:'POST',
+    headers:{Authorization:'Bearer '+token,'Content-Type':'application/json','X-Upload-Content-Type':blob.type||'application/octet-stream','X-Upload-Content-Length':String(blob.size)},
+    body:JSON.stringify({name:filename,parents:[folder]})
+  });
+  if(!init.ok)throw new Error('Drive upload start failed: '+(await init.text()).slice(0,200));
+  const loc=init.headers.get('Location')||init.headers.get('location');
+  if(!loc)throw new Error('Drive did not return an upload URL.');
+  const put=await fetch(loc,{method:'PUT',headers:{'Content-Type':blob.type||'application/octet-stream'},body:blob});
+  if(!put.ok)throw new Error('Drive upload failed: '+(await put.text()).slice(0,200));
+  return true;
+}
+async function uploadLastToDrive(kind){
+  try{
+    const url=kind==='zip'?LAST_ZIP_URL:LAST_VIDEO_URL;
+    if(!url)return alert(kind==='zip'?'Render bulk Shorts first — no ZIP yet.':'Render a video first — no video yet.');
+    setCloudStatus('Cloud: downloading the file from the app, then uploading to your Drive folder…');
+    const r=await fetch(url);if(!r.ok)throw new Error('That file is not on this server anymore (server may have restarted before it was saved). Render it again, then upload.');
+    const blob=await r.blob();
+    const name=decodeURIComponent(url.split('/').pop()||('video-'+Date.now()+'.mp4'));
+    await uploadBlobToDrive(blob,name);
+    setCloudStatus('Cloud: ✅ Saved “'+name+'” ('+(blob.size/1048576).toFixed(1)+' MB) into your Google Drive → “Text to Video Studio” folder.');
+  }catch(e){alert('Drive upload failed: '+e.message);setCloudStatus('Cloud: upload failed — '+e.message)}
+}
+
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}
+boot().catch(e=>alert('Failed to load app: '+e.message));
+</script></body></html>
