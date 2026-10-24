@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: text-to-video-studio
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false # optional: paste later for Google sign-in
+      - key: OWNER_EMAILS
+        sync: false # optional: set your Gmail ONLY after Google sign-in works

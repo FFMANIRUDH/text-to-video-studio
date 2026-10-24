@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+data/.app_secret
+outputs/users/
+outputs/previews/
+outputs/*.mp4
+outputs/*.zip
+outputs/music/*.wav
+*.log
